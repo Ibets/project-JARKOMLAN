@@ -116,54 +116,63 @@ class OSPFLab(Topo):
 						( '/var/run' ),
 						'/var/mn' ]
 		
-		C11 = self.addHost('C11', ip="172.16.1.2/24", defaultRoute="via 172.16.1.1")
-		C21 = self.addHost('C21', ip="172.17.1.2/24", defaultRoute="via 172.17.1.1")
-		C31 = self.addHost('C31', ip="172.18.1.2/24", defaultRoute="via 172.18.1.1")
-
-		S11 = self.addSwitch("S11", inNamespace=True)
-		S21 = self.addSwitch("S21", inNamespace=True)
-		S31 = self.addSwitch("S31", inNamespace=True)
-
-		R11 = self.addNode("R11", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
-		R12 = self.addNode("R12", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
-		R13 = self.addNode("R13", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
-		R14 = self.addNode("R14", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
+		#  R1 subnet
+		C1_1 = self.addHost('C1_1', ip="172.16.1.2/24", defaultRoute="via 172.16.1.1")
+		C1_2 = self.addHost('C1_2', ip="172.16.2.2/24", defaultRoute="via 172.16.2.1")
+		R1 = self.addNode("R1", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
+		S1 = self.addSwitch("S1", inNamespace=True)
+		R1_1 = self.addNode("R1_1", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
+		R1_2 = self.addNode("R1_2", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
 		
-		R21 = self.addNode("R21", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
-		R22 = self.addNode("R22", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
-		R23 = self.addNode("R23", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
-		R24 = self.addNode("R24", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
+		# add links for subnet 1
+		self.addLink(S1,R1, intfName2="eth0") 
+		self.addLink(S1,R1_1, intfName2="eth0")
+		self.addLink(S1,R1_2,  intfName2="eth0")
+	#region 
+
+		# Do not manually set the interface name of a switch's interface
+		# mininet will not be able to automatically add the interfaces to its bridge
+		#endregion
+
+		self.addLink(C1_1,R1_1, intfName2="eth1")
+		self.addLink(C1_2,R1_2, intfName2="eth1")
+
+		# R2 Subnet
+		C2_1 = self.addHost('C2_1', ip="172.17.1.2/24", defaultRoute="via 172.17.1.1")
+		C2_2 = self.addHost('C2_2', ip="172.17.2.2/24", defaultRoute="via 172.17.2.1")
+		R2 = self.addNode("R2", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
+		S2 = self.addSwitch("S2", inNamespace=True)
 		
-		R31 = self.addNode("R31", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
-		R32 = self.addNode("R32", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
-		R33 = self.addNode("R33", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
-		R34 = self.addNode("R34", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
+		R2_1 = self.addNode("R2_1", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
+		R2_2 = self.addNode("R2_2", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
 
-		self.addLink(S11, C11)
-		self.addLink(S11, R12, intfName2="eth0")  # Removed intfName2="eth0"
-		self.addLink(R12, R11, intfName1="eth1", intfName2="eth1")  # Changed intfName1 back to eth1
-		self.addLink(R12, R14, intfName1="eth2", intfName2="eth1")  # Changed intfName1 back to eth2
-		self.addLink(R13, R14, intfName1="eth0", intfName2="eth2")  # Changed intfName1 back to eth0
-		self.addLink(R13, R11, intfName1="eth1", intfName2="eth2")  # Changed intfName1 back to eth1
+		# add links for subnet 2
+		self.addLink(S2,R2, intfName2="eth0")
+		self.addLink(S2,R2_1, intfName2="eth0")
+		self.addLink(S2,R2_2, intfName2="eth0")
+		self.addLink(C2_1,R2_1, intfName2="eth1")
+		self.addLink(C2_2,R2_2, intfName2="eth1")
 
-		self.addLink(S21, C21)
-		self.addLink(S21, R21, intfName2="eth0")  # Removed intfName2="eth0"
-		self.addLink(R22, R21, intfName1="eth1", intfName2="eth1")  # Changed intfName1 back to eth1
-		self.addLink(R22, R24, intfName1="eth2", intfName2="eth1")  # Changed intfName1 back to eth2
-		self.addLink(R23, R24, intfName1="eth1", intfName2="eth2")  # Changed intfName1 back to eth1
-		self.addLink(R23, R21, intfName1="eth2", intfName2="eth2")  # Changed intfName1 back to eth2
+# R3 Subnet
+		C3_1 = self.addHost('C3_1', ip="172.18.1.2/24", defaultRoute="via 172.18.1.1")
+		C3_2 = self.addHost('C3_2', ip="172.18.2.2/24", defaultRoute="via 172.18.2.1")
+		R3 = self.addNode("R3", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
+		S3 = self.addSwitch("S3", inNamespace=True)
+		R3_1 = self.addNode("R3_1", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
+		R3_2 = self.addNode("R3_2", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
+	
+		# add links for subnet 3
+		self.addLink(S3,R3,  intfName2="eth0")
+		self.addLink(S3,R3_1, intfName2="eth0")
+		self.addLink(S3,R3_2, intfName2="eth0")
+		self.addLink(C3_1,R3_1, intfName2="eth1")
+		self.addLink(C3_2,R3_2, intfName2="eth1")
 
-		self.addLink(S31, C31)
-		self.addLink(S31, R33, intfName2="eth0")  # Removed intfName2="eth0"
-		self.addLink(R32, R31, intfName1="eth1", intfName2="eth1")  # Changed intfName1 back to eth1
-		self.addLink(R32, R34, intfName1="eth2", intfName2="eth1")  # Changed intfName1 back to eth2
-		self.addLink(R33, R34, intfName1="eth1", intfName2="eth2")  # Changed intfName1 back to eth1
-		self.addLink(R33, R31, intfName1="eth2", intfName2="eth2")  # Changed intfName1 back to eth2
-
-		# Backbone routers (inter-subnet links)
-		self.addLink(R14, R22, intfName1="eth0", intfName2="eth0")
-		self.addLink(R23, R34, intfName1="eth0", intfName2="eth0")
-		self.addLink(R11, R31, intfName1="eth0", intfName2="eth0")
+		# Add links between backbone routers		
+		self.addLink(R1,R2, intfName1="eth1", intfName2="eth1")
+		self.addLink(R1,R3, intfName1="eth2", intfName2="eth1")
+		self.addLink(R2,R3, intfName1="eth2", intfName2="eth2")
+		
 		confdir = Path(config_path % {"name": ""})
 		if (not flags.generateConfig):
 			if (not Path.exists(confdir)):

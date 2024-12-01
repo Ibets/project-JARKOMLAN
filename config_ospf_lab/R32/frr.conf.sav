@@ -1,0 +1,36 @@
+frr version 8.5.6
+frr defaults traditional
+hostname ubuntu
+hostname R32
+service integrated-vtysh-config
+!
+interface eth1
+ ip address 10.30.1.2/24
+exit
+!
+interface eth2
+ ip address 10.30.2.1/24
+exit
+!
+interface lo
+ ip address 128.20.0.32/32
+exit
+!
+router bgp 300
+ bgp router-id 3.3.3.2
+ no bgp hard-administrative-reset
+ no bgp graceful-restart notification
+ neighbor 10.30.1.1 remote-as 300
+ neighbor 10.30.1.1 update-source lo
+ !
+ address-family ipv4 unicast
+  network 128.200.0.32/32
+ exit-address-family
+exit
+!
+router ospf
+ ospf router-id 3.3.3.2
+ network 10.30.1.0/24 area 3
+ network 10.30.2.0/24 area 3
+exit
+!

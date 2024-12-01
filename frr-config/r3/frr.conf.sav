@@ -1,0 +1,6 @@
+frr version 8.5.4
+frr defaults traditional
+ipv6 forwarding
+hostname r3
+service integrated-vtysh-config
+!

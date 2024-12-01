@@ -116,54 +116,63 @@ class OSPFLab(Topo):
 						( '/var/run' ),
 						'/var/mn' ]
 		
-		C11 = self.addHost('C11', ip="172.16.1.2/24", defaultRoute="via 172.16.1.1")
-		C21 = self.addHost('C21', ip="172.17.1.2/24", defaultRoute="via 172.17.1.1")
-		C31 = self.addHost('C31', ip="172.18.1.2/24", defaultRoute="via 172.18.1.1")
+		#  R1 subnet
+		#  AS1
+		C11 = self.addHost('C11', ip="172.20.1.2/24", defaultRoute="via 172.20.1.1")
+		C21 = self.addHost('C21', ip="172.21.1.2/24", defaultRoute="via 172.21.1.1")
+		C31 = self.addHost('C31', ip="172.22.1.2/24", defaultRoute="via 172.22.1.1")
 
 		S11 = self.addSwitch("S11", inNamespace=True)
 		S21 = self.addSwitch("S21", inNamespace=True)
 		S31 = self.addSwitch("S31", inNamespace=True)
 
+		# Routers with unique names
 		R11 = self.addNode("R11", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
 		R12 = self.addNode("R12", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
 		R13 = self.addNode("R13", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
 		R14 = self.addNode("R14", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
-		
+
 		R21 = self.addNode("R21", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
 		R22 = self.addNode("R22", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
 		R23 = self.addNode("R23", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
 		R24 = self.addNode("R24", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
-		
+
 		R31 = self.addNode("R31", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
 		R32 = self.addNode("R32", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
 		R33 = self.addNode("R33", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
 		R34 = self.addNode("R34", cls=LinuxRouter, ip=None, privateDirs=privateDirs, inNamespace=True)
 
+		# Subnet 1
 		self.addLink(S11, C11)
 		self.addLink(S11, R12, intfName2="eth0")  # Removed intfName2="eth0"
 		self.addLink(R12, R11, intfName1="eth1", intfName2="eth1")  # Changed intfName1 back to eth1
 		self.addLink(R12, R14, intfName1="eth2", intfName2="eth1")  # Changed intfName1 back to eth2
 		self.addLink(R13, R14, intfName1="eth0", intfName2="eth2")  # Changed intfName1 back to eth0
 		self.addLink(R13, R11, intfName1="eth1", intfName2="eth2")  # Changed intfName1 back to eth1
-
+		
+		# Subnet 2
 		self.addLink(S21, C21)
 		self.addLink(S21, R21, intfName2="eth0")  # Removed intfName2="eth0"
 		self.addLink(R22, R21, intfName1="eth1", intfName2="eth1")  # Changed intfName1 back to eth1
 		self.addLink(R22, R24, intfName1="eth2", intfName2="eth1")  # Changed intfName1 back to eth2
 		self.addLink(R23, R24, intfName1="eth1", intfName2="eth2")  # Changed intfName1 back to eth1
 		self.addLink(R23, R21, intfName1="eth2", intfName2="eth2")  # Changed intfName1 back to eth2
-
+		
+		# Subnet 3
 		self.addLink(S31, C31)
 		self.addLink(S31, R33, intfName2="eth0")  # Removed intfName2="eth0"
 		self.addLink(R32, R31, intfName1="eth1", intfName2="eth1")  # Changed intfName1 back to eth1
 		self.addLink(R32, R34, intfName1="eth2", intfName2="eth1")  # Changed intfName1 back to eth2
 		self.addLink(R33, R34, intfName1="eth1", intfName2="eth2")  # Changed intfName1 back to eth1
 		self.addLink(R33, R31, intfName1="eth2", intfName2="eth2")  # Changed intfName1 back to eth2
-
+		
 		# Backbone routers (inter-subnet links)
-		self.addLink(R14, R22, intfName1="eth0", intfName2="eth0")
-		self.addLink(R23, R34, intfName1="eth0", intfName2="eth0")
-		self.addLink(R11, R31, intfName1="eth0", intfName2="eth0")
+		self.addLink(R14, R11, intfName1="eth0", intfName2="eth0")  # Changed intfName1 back to eth0
+		self.addLink(R23, R34, intfName1="eth0", intfName2="eth0")  # Changed intfName1 back to eth0
+		self.addLink(R11, R31, intfName1="eth0", intfName2="eth0")  # Changed intfName1 back to eth0
+
+
+		
 		confdir = Path(config_path % {"name": ""})
 		if (not flags.generateConfig):
 			if (not Path.exists(confdir)):

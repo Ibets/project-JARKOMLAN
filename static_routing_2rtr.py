@@ -45,7 +45,7 @@ def run():
     info( '*** Add Routers\n')
     r1 = net.addHost('r1', cls=LinuxRouter, ip=None, privateDirs=privateDirs)
     r2 = net.addHost('r2', cls=LinuxRouter, ip=None, privateDirs=privateDirs)
-
+    r3 = net.addHost('r3', cls=LinuxRouter, ip=None, privateDirs=privateDirs)
     info( '*** Add hosts\n')
     h1 = net.addHost('h1', cls=Node, ip='192.168.1.2/24', defaultRoute='via 192.168.1.1')
     h2 = net.addHost('h2', cls=Node, ip='192.168.2.2/24', defaultRoute='via 192.168.2.1')
@@ -54,6 +54,8 @@ def run():
     net.addLink(h1, r1)
     net.addLink(h2, r2)
     net.addLink(r1, r2)
+    net.addLink(r1, r3)
+    net.addLink(r3, r2)
 
     info( '*** Starting network\n')
     net.start()

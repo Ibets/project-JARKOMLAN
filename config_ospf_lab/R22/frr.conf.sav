@@ -1,0 +1,53 @@
+frr version 8.5.6
+frr defaults traditional
+hostname ubuntu
+hostname R22
+service integrated-vtysh-config
+!
+ip route 172.16.1.0/24 Null0
+ip route 128.100.0.14/32 10.100.200.1
+!
+interface eth0
+ ip address 10.100.200.2/30
+exit
+!
+interface eth1
+ ip address 10.200.1.2/24
+exit
+!
+interface eth2
+ ip address 10.200.2.1/24
+exit
+!
+interface lo
+ ip address 128.200.0.22/32
+exit
+!
+router bgp 200
+ bgp router-id 2.2.2.2
+ no bgp hard-administrative-reset
+ no bgp graceful-restart notification
+ neighbor 10.100.200.1 remote-as 100
+ neighbor 10.100.200.1 update-source lo
+ neighbor 10.200.1.1 remote-as 200
+ neighbor 10.200.1.1 update-source lo
+ neighbor 10.200.2.2 remote-as 200
+ neighbor 10.200.2.2 update-source lo
+ !
+ address-family ipv4 unicast
+  network 10.100.200.0/30
+  network 128.200.0.22/32
+  network 172.17.1.0/24
+  neighbor 10.100.200.1 next-hop-self
+  neighbor 10.200.1.1 next-hop-self
+  neighbor 10.200.2.2 next-hop-self
+ exit-address-family
+exit
+!
+router ospf
+ ospf router-id 2.2.2.2
+ network 10.200.1.0/24 area 2
+ network 10.200.2.0/24 area 2
+ network 128.200.0.22/32 area 2
+exit
+!
