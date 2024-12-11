@@ -88,6 +88,7 @@ Verify connectivity between clients:
 - **Ping C1_2 to C2_1**
 - **Ping C1_2 to C3_2**
 
+if your connection is unsuccessfull you can try to trace the route to find the problem . Output for this command should be reply from the destination.
 ### OSPF Database
 Compare OSPF databases using the command:
 ```bash
