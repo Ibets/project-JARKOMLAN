@@ -62,19 +62,10 @@ This repository demonstrates the implementation of static routing in a Mininet e
 ## Steps to Set Up
 
 ### 1. Cloning and Modifying Files
-- Clone the `net101` repository.
-- Create a new router `R3` by copying the directory of `Router 2` and editing configuration files (`frr.conf`, `vtysh.conf`).
-
-### 2. Modifying the Python Script
-- Add the new router `R3` to the topology by modifying the Python script:
-  - Use `net.addHost` to add `R3`.
-  - Add links: `R1-R3` and `R3-R2`.
-
-Example addition:
-```python
-r3 = net.addHost('r3')
-net.addLink(r1, r3)
-net.addLink(r3, r2)
+- Clone the this repository.
+### 2. Run the script
+```
+sudo python3 static_routing_2rtr.py
 ```
 
 ---
