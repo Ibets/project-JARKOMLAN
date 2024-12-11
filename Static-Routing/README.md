@@ -50,7 +50,7 @@ r2 -- 192.168.2.0/24 --- h2
 ## Environment
 
 - **Operating System:** VirtualBox Ubuntu 22.04
-- **Tools:** Mininet, `net101` repository
+- **Tools:** Mininet, thisrepository
 - **Routing Software:** FRR (Free Range Routing) version 8.5.4
 
 ---
