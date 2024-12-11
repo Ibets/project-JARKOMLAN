@@ -1,6 +1,5 @@
-
 ## Static and Dynamic Routing
-
+This repository demonstrates the implementation of static routing in a Mininet environment with the following topology:
 ```mermaid
 graph LR;
 %%Colors
@@ -47,9 +46,6 @@ r3 -- 10.10.3.0/30 --- r2
 r2 -- 192.168.2.0/24 --- h2
 
 ```
-# Static Routing in Mininet
-
-This repository demonstrates the implementation of static routing in a Mininet environment with the following topology:
 
 ## Environment
 
