@@ -1,129 +1,148 @@
-# OSPF Single-Area and Multi-Area Routing Lab
+# iBGP
 
-This repository contains the configurations and setup for an OSPF (Open Shortest Path First) routing lab experiment. The lab demonstrates the implementation of intra-domain routing using both single-area and multi-area OSPF configurations.
-
----
-
-## Overview
-
-This project is designed to simulate and analyze the behavior of OSPF in a controlled environment. The experiment uses:
-
-- **Environment:** VirtualBox Ubuntu 22.04 with Mininet and `net101` repository.
-- **Routing Software:** FRR (Free Range Routing) version 8.5.4.
-
-### Key Features
-
-1. **Single-Area OSPF Configuration**: All routers operate in a single OSPF area (Area 0).
-2. **Multi-Area OSPF Configuration**: Routers are segmented into multiple OSPF areas for scalability and structure.
-3. **Network Simulation:** Mininet is used to simulate the network topology.
-4. **Routing Verification:** Validate routing with commands like `ping`, `show running-config`, and `sh ip ospf database`.
+This project demonstrates the configuration of **Border Gateway Protocol (BGP)** in a network topology with multiple Autonomous Systems (ASNs). It also includes traffic engineering using import and export policies to control route preferences and traffic flow.
 
 ---
 
-## Topology and Configuration
+## **Network Topology Overview**
 
-![Topology](https://github.com/Ibets/project-JARKOMLAN/blob/main/OSPF/images/Picture1.png)
+- **Routers and ASNs:**
+  - **R1:** ASN 100
+  - **R2:** ASN 200
+  - **R3:** ASN 300
 
-### Single-Area OSPF
+- **Routing Protocols:**
+  - **OSPF** for internal routing.
+  - **BGP** for inter-AS communication.
 
-All routers are configured to operate within Area 0. Below is an example configuration for a router:
-
-```bash
-router ospf
- ospf router-id 1.1.1.1
- network 10.11.1.0/24 area 0
- network 172.16.1.0/24 area 0
-exit
-```
-
-### Multi-Area OSPF
-
-The network is divided into multiple OSPF areas (Area 1, Area 2, Area 3, etc.) to optimize routing and scalability. Example configuration for a router:
-
-```bash
-router ospf
- ospf router-id 1.1.1.1
- network 10.11.1.0/24 area 1
- network 172.16.1.0/24 area 1
-exit
-```
+- **Route Advertisement:**
+  - Each router advertises its local networks through BGP.
 
 ---
 
-## Steps to Run the Lab
+## **Scenarios and Configurations**
 
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/Ibets/project-JARKOMLAN
-   ```
-2. **Start the Topology**
-   Run the following command to initialize the topology:
-   ```bash
-   sudo python3 ospf-lab.py
-   ```
-3. **Access Routers**
-   Use the provided script to connect to each router:
-   ```bash
-   ./connect.sh <router-name> vtysh
-   ```
-4. **Apply Configuration**
-   Enter the configuration mode and paste the appropriate router configuration.
+### **Scenario 1: Traffic Engineering**
 
-5. **Verify Configuration**
-   Use the following commands to ensure proper setup:
-   ```bash
-   show running-config
-   ping <destination>
-   sh ip ospf database
+#### Objective:
+Direct traffic from R3 to R1 via R2 and vice versa.
+
+1. **Import Policy - Local Preference**
+   
+   Configure R3 to prefer routes via R2.
+   
+   ```
+   neighbor 10.10.2.1 route-map AVOID_R1 in
+   neighbor 10.10.3.2 route-map PREFER_R2 in
+
+   route-map PREFER_R2 permit 10
+   set local-preference 200
+
+   route-map AVOID_R1 permit 10
+   set local-preference 100
    ```
 
----
+   **Result:**
+   - Traffic from R3 to R1 is routed through R2.
+   - The BGP routing table reflects the higher local preference for routes via R2.
 
-## Testing and Results
+2. **Export Policy - AS-Path Prepending**
 
-### Ping Tests
-Verify connectivity between clients:
+   Configure R3 to make R2 the preferred path for traffic from R1.
 
-- **Ping C1_1 to C3_1**
-- **Ping C1_2 to C2_1**
-- **Ping C1_2 to C3_2**
+   ```
+   neighbor 10.10.2.1 route-map PREPEND_R1 out
 
-if your connection is unsuccessfull you can try to trace the route to find the problem . Output for this command should be reply from the destination.
-### OSPF Database
-Compare OSPF databases using the command:
-```bash
-sh ip ospf database
-```
-Observe differences in:
+   route-map PREPEND_R1 permit 10
+   set as-path prepend 300 300 300 300
+   ```
 
-- **Router Link States**
-- **Net Link States**
-- **Summary Link States**
+   **Result:**
+   - Traffic from R1 to R3 is also routed through R2.
+   - AS-path length manipulation ensures R2 is the preferred path.
 
 ---
 
-## Observations
+### **Scenario 2: Prefix Filtering**
 
-### Single-Area vs. Multi-Area
+#### Objective:
+Control the prefixes imported and exported by each router.
 
-1. **Scalability**: Multi-area OSPF provides better scalability by segmenting the network into smaller areas.
-2. **Routing Table Size**: Multi-area OSPF reduces the size of routing tables and database entries within an area.
-3. **Performance**: Reduces CPU and memory usage on routers in large networks.
+1. **Import Policy: Prefix Filtering**
+
+   On R1, accept only `/23` prefixes from neighbors.
+
+   ```
+   ip prefix-list ACCEPT_ONLY_23 seq 10 permit 10.0.0.0/23
+   route-map IMPORT_POLICY permit 10
+   match ip address prefix-list ACCEPT_ONLY_23
+
+   neighbor 10.10.1.2 route-map IMPORT_POLICY in
+   ```
+
+   **Result:**
+   - Only prefixes with `/23` subnet masks are accepted.
+
+2. **Export Policy: Prefix Filtering**
+
+   On R1, advertise only its local prefixes.
+
+   ```
+   ip prefix-list EXPORT_OWN_PREFIX seq 10 permit 10.11.1.0/23
+   ip prefix-list EXPORT_OWN_PREFIX seq 20 permit 10.11.1.0/24
+
+   route-map EXPORT_POLICY permit 10
+   match ip address prefix-list EXPORT_OWN_PREFIX
+
+   neighbor 10.10.1.2 route-map EXPORT_POLICY out
+   ```
+
+   **Result:**
+   - R1 advertises only its own prefixes and does not act as a transit router.
 
 ---
 
-## Conclusion
+## **Testing and Verification**
 
-This lab highlights the practical implementation and benefits of OSPF routing in both single-area and multi-area setups. Multi-area OSPF demonstrates its scalability and efficiency in managing larger networks, making it a preferred choice for enterprise-level applications.
+1. **Ping and Traceroute:**
+   - Validate connectivity between hosts.
+   - Use `traceroute` to confirm traffic paths.
+
+2. **BGP Routing Table:**
+   - Run `show ip bgp` to check the BGP routing table and confirm policy application.
+
+3. **Configuration Check:**
+   - Use `show running-config` to verify the applied configurations.
 
 ---
 
-## References
+## **Key Commands Summary**
 
-- [FRR Documentation](https://frrouting.org/)
-- [OSPF Routing Protocol Overview](https://www.cisco.com/)
-- [Mininet](http://mininet.org/)
+- **BGP Neighbor Configuration:**
+  ```
+  neighbor <neighbor_ip> remote-as <asn>
+  neighbor <neighbor_ip> route-map <map_name> in|out
+  ```
+
+- **Route Map Configuration:**
+  ```
+  route-map <map_name> permit|deny <sequence_number>
+  set local-preference <value>
+  set as-path prepend <asn> <asn> <asn>
+  match ip address prefix-list <prefix_list_name>
+  ```
+
+- **Prefix List Configuration:**
+  ```
+  ip prefix-list <name> seq <seq_number> permit|deny <prefix>
+  ```
 
 ---
 
-Feel free to contribute or raise issues in this repository!
+## **Conclusion**
+
+This configuration demonstrates effective traffic engineering and route control using BGP policies. By manipulating **local preference**, **AS-path prepending**, and **prefix filtering**, traffic flow can be optimized, and network behavior can be fine-tuned to meet specific requirements.
+
+---
+
+Feel free to contribute or report issues related to this project!
