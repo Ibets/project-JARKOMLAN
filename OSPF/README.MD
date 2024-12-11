@@ -1,5 +1,5 @@
 ## ospf lab
 
-![Sample Image 1](https://yavuzceliker.github.io/sample-images/image-44.jpg)
+![Topology](https://github.com/Ibets/project-JARKOMLAN/blob/main/OSPF/images/Picture1.png)
 
 
