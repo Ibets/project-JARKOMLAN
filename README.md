@@ -6,7 +6,8 @@ This is a project that will explain simple configuration about network , startin
 
 - Static Routing
 - OSPF
-- iBGP & eBGP
+- iBGP
+- eBGP
 
 ## Getting Started
 
