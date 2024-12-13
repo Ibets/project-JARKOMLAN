@@ -2,6 +2,7 @@
 
 This is a project that will explain simple configuration about network , starting from Static Routing , OSPF , iBGP and eBGP. (All of these work were created and run in linux virtual machine , WSL and ubuntu related enivronment should be fine)
 
+GILBERT JONATHAN SIMARMATA [215150200111030]
 # Table of Content
 
 - [Static Routing](https://github.com/Ibets/project-JARKOMLAN/blob/main/Static-Routing/)
