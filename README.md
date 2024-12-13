@@ -6,7 +6,7 @@ This is a project that will explain simple configuration about network , startin
 
 - Static Routing
 - OSPF
-- iBGP
+- [iBGP](https://github.com/Ibets/project-JARKOMLAN/blob/main/iBGP/README.MD)
 - eBGP
 
 ## Getting Started
