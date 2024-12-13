@@ -5,9 +5,9 @@ This is a project that will explain simple configuration about network , startin
 # Table of Content
 
 - [Static Routing](https://github.com/Ibets/project-JARKOMLAN/blob/main/Static-Routing/)
-- [OSPF](https://github.com/Ibets/project-JARKOMLAN/blob/main/OSPF/README.MD)
-- [iBGP](https://github.com/Ibets/project-JARKOMLAN/blob/main/iBGP/README.MD)
-- [eBGP](https://github.com/Ibets/project-JARKOMLAN/blob/main/eBGP/README.md)
+- [OSPF](https://github.com/Ibets/project-JARKOMLAN/blob/main/OSPF/)
+- [iBGP](https://github.com/Ibets/project-JARKOMLAN/blob/main/iBGP/)
+- [eBGP](https://github.com/Ibets/project-JARKOMLAN/blob/main/eBGP/)
 
 ## Getting Started
 
@@ -57,7 +57,7 @@ if you succeeded in running one of these then you should get into mininet CLI.
 feel free to explore this project.
 
 ### Report
-you can see the full report in bahasa indonesia [here](https://github.com/Ibets/project-JARKOMLAN/blob/main/Report/README.md)
+you can see the full report in bahasa indonesia [here](https://github.com/Ibets/project-JARKOMLAN/blob/main/Report/)
 
 
 ## Built With
