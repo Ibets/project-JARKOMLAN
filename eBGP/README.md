@@ -1,4 +1,4 @@
-# README: eBGP and iBGP Implementation with Mininet
+# eBGP and iBGP Implementation with Mininet
 
 ## Project Description
 This project aims to build a network topology involving the implementation of **iBGP (Internal BGP)** and **eBGP (External BGP)** protocols on multiple routers connected within a network using Mininet. The topology consists of three Autonomous Systems (**AS**):
