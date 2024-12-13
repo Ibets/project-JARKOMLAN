@@ -4,7 +4,7 @@ This is a project that will explain simple configuration about network , startin
 
 # Table of Content
 
-- [Static Routing](https://github.com/Ibets/project-JARKOMLAN/blob/main/Static-Routing/README.md)
+- [Static Routing](https://github.com/Ibets/project-JARKOMLAN/blob/main/Static-Routing/)
 - [OSPF](https://github.com/Ibets/project-JARKOMLAN/blob/main/OSPF/README.MD)
 - [iBGP](https://github.com/Ibets/project-JARKOMLAN/blob/main/iBGP/README.MD)
 - [eBGP](https://github.com/Ibets/project-JARKOMLAN/blob/main/eBGP/README.md)
