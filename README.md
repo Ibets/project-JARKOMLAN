@@ -56,6 +56,10 @@ sudo pyhton3 ibgp-ibgp.py
 if you succeeded in running one of these then you should get into mininet CLI.
 feel free to explore this project.
 
+### Report
+you can see the full report in bahasa indonesia [here](https://github.com/Ibets/project-JARKOMLAN/blob/main/Report/README.md)
+
+
 ## Built With
 
 * Python
